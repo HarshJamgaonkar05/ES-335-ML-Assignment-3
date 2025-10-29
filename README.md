@@ -5,6 +5,34 @@ Deadline: 31 October
 
 ---
 
+## 🚀 SETUP COMPLETE - Tasks 1.1 & 1.2 Ready!
+
+### Quick Start
+1. **Upload to Kaggle**: `shakespeare_processed.pkl` and `linux_kernel_processed.pkl`
+2. **Copy Notebook**: Use `question1_shakespeare.ipynb` or the `.py` files
+3. **Enable GPU** in Kaggle
+4. **Run All Cells**
+5. **Download Results** after 2-4 hours
+
+**See [QUICK_START.md](QUICK_START.md) for detailed instructions!**
+
+### What's Included
+- ✅ Shakespeare dataset preprocessed (0% UNK tokens!)
+- ✅ Linux Kernel dataset preprocessed (8.14% UNK tokens)
+- ✅ Complete training notebooks with checkpointing
+- ✅ t-SNE visualization code
+- ✅ Sample text generation
+- ✅ All requirements for 1.1 and 1.2 fulfilled
+
+### Key Files
+- `shakespeare_processed.pkl` - Upload to Kaggle
+- `linux_kernel_processed.pkl` - Upload to Kaggle
+- `question1_shakespeare.ipynb` - Training notebook
+- `SUMMARY.md` - Complete overview
+- `verify_preprocessing.py` - Data verification
+
+---
+
 ## 1. Next-Word Prediction using MLP [5 marks]
 
 In this question, you will extend the next-character prediction notebook (discussed in class) to a next-word prediction problem.That is you will create a MLP based text generator. You will train the model, visualize learned word embeddings, and finally deploy a Streamlit app for interactive text generation. It is recommended to refer to Andrej Karpathy’s blog post on the Effectiveness of RNNs.  
