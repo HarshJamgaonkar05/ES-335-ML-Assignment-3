@@ -118,7 +118,6 @@ Report the following:
 - Accuracy, F1-score, confusion matrix
 - Model size (number of parameters)
 - Inference time on test set
-
 ---
 
 ## Submission Format
