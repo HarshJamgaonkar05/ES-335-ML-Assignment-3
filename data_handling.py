@@ -9,9 +9,7 @@ def download_dataset(url, filename):
     urllib.request.urlretrieve(url, filename)
     print(f"Downloaded {filename}")
 
-def preprocess_shakespeare(input_file, output_prefix):
-    print("\n=== Processing Shakespeare Dataset ===")
-    
+def preprocess_shakespeare(input_file, output_prefix):    
     with open(input_file, 'r', encoding='utf-8') as f:
         text = f.read()
         

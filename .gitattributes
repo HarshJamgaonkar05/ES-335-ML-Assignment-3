@@ -2,5 +2,7 @@ Models/*.pth filter=lfs diff=lfs merge=lfs -text
 Outputs/*.npy filter=lfs diff=lfs merge=lfs -text
 Outputs/*.npz filter=lfs diff=lfs merge=lfs -text
 Outputs/*.pkl filter=lfs diff=lfs merge=lfs -text
+linux[[:space:]]data/* filter=lfs diff=lfs merge=lfs -text
+shakespeare[[:space:]]data/* filter=lfs diff=lfs merge=lfs -text
 linux[[:space:]]data/*.pkl filter=lfs diff=lfs merge=lfs -text
 shakespeare[[:space:]]data/*.pkl filter=lfs diff=lfs merge=lfs -text
