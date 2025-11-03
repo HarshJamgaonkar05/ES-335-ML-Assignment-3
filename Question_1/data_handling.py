@@ -94,7 +94,7 @@ def preprocess_shakespeare(input_file, output_prefix):
     print(f"\nTraining samples created: {len(X_data)}")
     print(f"Context shape: {X_data.shape}")
     print(f"Target shape: {y_data.shape}")
-    
+
 
     data = {
         'X': X_data,
