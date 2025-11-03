@@ -1,8 +1,9 @@
 # Assignment 3 — ES-335 Machine Learning
 
-Total Marks: 11  
-Deadline: 31 October
+ Total Marks: 11  
+ Deadline: 31 October
 
+ ---
 ## 1. Next-Word Prediction using MLP [5 marks]
 
 In this question, you will extend the next-character prediction notebook (discussed in class) to a next-word prediction problem.That is you will create a MLP based text generator. You will train the model, visualize learned word embeddings, and finally deploy a Streamlit app for interactive text generation. It is recommended to refer to Andrej Karpathy’s blog post on the Effectiveness of RNNs.  
@@ -113,10 +114,9 @@ Report the following:
 • Implement a simple CNN with a convolutional layer having 32 filters of size 3x3, a maxpool layer, a fully connected layer with 128 neurons and an output layer with 10 neurons (for the 10 classes) and ReLU activation. Train on MNIST dataset.  
 • Additionally, use two any pretrained CNNs of your choice (e.g. AlexNet, MobileNet, or EfficientNet) for inference.  
 • Compare all three models:
-- Accuracy, F1-score, confusion matrix
-- Model size (number of parameters)
-- Inference time on test set
-
+ - Accuracy, F1-score, confusion matrix
+ - Model size (number of parameters)
+ - Inference time on test set
 ---
 
 ## Submission Format
