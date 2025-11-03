@@ -17,6 +17,9 @@ import numpy as np
 import os
 from pathlib import Path
 
+# Resolve paths relative to this file so the app works regardless of the current working directory
+BASE_DIR = Path(__file__).parent.resolve()
+
 
 class NextWordMLP(nn.Module):
     """MLP-based next-word prediction model"""
@@ -55,9 +58,11 @@ class NextWordMLP(nn.Module):
 
 @st.cache_resource
 def load_model(model_path):
-    
+    # Accept either Path or string
+    model_path = str(model_path)
+
     if not os.path.exists(model_path):
-        st.error(f"Model file not found: {model_path}")
+        st.error(f"Model file not found: {os.path.abspath(model_path)}")
         return None
     
     try:
@@ -167,9 +172,10 @@ def main():
     
     st.sidebar.header(" Configuration")
     
+    # Build model paths relative to this script's directory (BASE_DIR)
     available_models = {
-        "Shakespeare (Natural Language)": "Models/shakespeare_best_model.pth",
-        "Linux Kernel (Code)": "Models/linux_kernel_best_model.pth"
+        "Shakespeare (Natural Language)": BASE_DIR / "Models" / "shakespeare_best_model.pth",
+        "Linux Kernel (Code)": BASE_DIR / "Models" / "linux_kernel_best_model.pth",
     }
     
     selected_model_name = st.sidebar.selectbox(
@@ -178,13 +184,35 @@ def main():
     )
     
     model_path = available_models[selected_model_name]
+    # convert Path to string when passing around
+    model_path = str(model_path)
     is_code = "Linux" in selected_model_name
     
     with st.spinner(f"Loading {selected_model_name}..."):
         model_info = load_model(model_path)
     
+    # Deployment debug: show resolved path and file existence to aid Streamlit Cloud troubleshooting
+    try:
+        model_exists = os.path.exists(model_path)
+        model_size = os.path.getsize(model_path) if model_exists else None
+    except Exception:
+        model_exists = False
+        model_size = None
+
+    with st.sidebar.expander(" Deployment debug"):
+        st.write(f"Resolved model path: `{model_path}`")
+        st.write(f"Exists: {model_exists}")
+        if model_size is not None:
+            st.write(f"Size (bytes): {model_size:,}")
+        st.write("Note: On Streamlit Cloud the repository is cloned on the server; large files tracked with Git LFS may not be present unless LFS objects are fetched.")
+
     if model_info is None:
-        st.error("Failed to load model. Please check that model files exist in the Models/ directory.")
+        st.error("Failed to load model.")
+        st.error(f"Attempted path: {model_path}")
+        if not model_exists:
+            st.error("File not found at resolved path. If this only happens on deploy, check that the model file is committed to the repo and available on the deployment server (Git LFS objects may be missing).")
+        else:
+            st.error("Model file exists but failed to load — check deployment logs for the full exception (Torch loading errors may be due to incompatible PyTorch versions or corrupted files).")
         return
     
     st.sidebar.success(" Model loaded!")
