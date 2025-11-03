@@ -17,9 +17,6 @@ import numpy as np
 import os
 from pathlib import Path
 
-# ============================================================================
-# Model Architecture (must match training)
-# ============================================================================
 
 class NextWordMLP(nn.Module):
     """MLP-based next-word prediction model"""
@@ -55,22 +52,19 @@ class NextWordMLP(nn.Module):
         output = self.fc3(h2)
         return output
 
-# ============================================================================
-# Model Loading and Caching
-# ============================================================================
 
 @st.cache_resource
 def load_model(model_path):
-    """Load trained model checkpoint with caching"""
+    
     if not os.path.exists(model_path):
         st.error(f"Model file not found: {model_path}")
         return None
     
     try:
-        # Load checkpoint
+
         checkpoint = torch.load(model_path, map_location='cpu')
         
-        # Extract model parameters
+
         vocab = checkpoint['vocab']
         word_to_idx = checkpoint['word_to_idx']
         idx_to_word = checkpoint['idx_to_word']
@@ -79,21 +73,21 @@ def load_model(model_path):
         hidden_dim = checkpoint['hidden_dim']
         activation = checkpoint.get('activation', 'relu')
         
-        # Initialize model
+
         model = NextWordMLP(
             vocab_size=len(vocab),
             embedding_dim=embedding_dim,
             context_length=context_length,
             hidden_dim=hidden_dim,
             activation=activation,
-            dropout=0.0  # No dropout during inference
+            dropout=0.0  
         )
         
-        # Load trained weights
+
         model.load_state_dict(checkpoint['model_state_dict'])
         model.eval()
         
-        # Return model and vocab info
+
         return {
             'model': model,
             'vocab': vocab,
@@ -109,24 +103,9 @@ def load_model(model_path):
         st.error(f"Error loading model: {str(e)}")
         return None
 
-# ============================================================================
-# Text Generation
-# ============================================================================
+
 
 def generate_text(model_info, seed_text, num_words, temperature=1.0, is_code=False):
-    """
-    Generate next words given seed text
-    
-    Args:
-        model_info: Dictionary with model and vocab info
-        seed_text: Input text string (or list for code)
-        num_words: Number of words to generate
-        temperature: Sampling temperature (higher = more random)
-        is_code: Whether this is code generation (affects tokenization)
-    
-    Returns:
-        Generated text string
-    """
     model = model_info['model']
     word_to_idx = model_info['word_to_idx']
     idx_to_word = model_info['idx_to_word']
@@ -134,7 +113,7 @@ def generate_text(model_info, seed_text, num_words, temperature=1.0, is_code=Fal
     
     model.eval()
     
-    # Tokenize input
+
     if is_code:
         words = seed_text if isinstance(seed_text, list) else seed_text.split()
     else:
@@ -142,42 +121,32 @@ def generate_text(model_info, seed_text, num_words, temperature=1.0, is_code=Fal
     
     generated = words.copy()
     
-    # Generate word by word
+
     for _ in range(num_words):
         # Get context window
         context = generated[-context_length:] if len(generated) >= context_length else generated
         
-        # Convert to indices (handle OOV with <UNK>)
+
         context_indices = [word_to_idx.get(w, word_to_idx.get('<UNK>', 0)) for w in context]
         
-        # Pad if needed
+
         if len(context_indices) < context_length:
             start_idx = word_to_idx.get('<START>', 0)
             context_indices = [start_idx] * (context_length - len(context_indices)) + context_indices
         
-        # Prepare input tensor
+
         context_tensor = torch.LongTensor([context_indices])
         
-        # Generate next word
+
         with torch.no_grad():
             output = model(context_tensor)
-            
-            # Apply temperature
             logits = output[0] / temperature
-            probs = F.softmax(logits, dim=0)
-            
-            # Sample from distribution
+            probs = F.softmax(logits, dim=0)          
             predicted_idx = torch.multinomial(probs, 1).item()
-        
-        # Get word
         next_word = idx_to_word[predicted_idx]
-        
-        # Stop if we hit end token
         if next_word == '<END>':
-            break
-        
-        generated.append(next_word)
-    
+            break     
+        generated.append(next_word) 
     return ' '.join(generated)
 
 
