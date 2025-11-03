@@ -204,16 +204,6 @@ def main():
         st.write(f"Exists: {model_exists}")
         if model_size is not None:
             st.write(f"Size (bytes): {model_size:,}")
-        st.write("Note: On Streamlit Cloud the repository is cloned on the server; large files tracked with Git LFS may not be present unless LFS objects are fetched.")
-
-    if model_info is None:
-        st.error("Failed to load model.")
-        st.error(f"Attempted path: {model_path}")
-        if not model_exists:
-            st.error("File not found at resolved path. If this only happens on deploy, check that the model file is committed to the repo and available on the deployment server (Git LFS objects may be missing).")
-        else:
-            st.error("Model file exists but failed to load — check deployment logs for the full exception (Torch loading errors may be due to incompatible PyTorch versions or corrupted files).")
-        return
     
     st.sidebar.success(" Model loaded!")
     st.sidebar.markdown("---")
