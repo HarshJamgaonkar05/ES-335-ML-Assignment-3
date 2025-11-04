@@ -321,9 +321,9 @@ def main():
     num_to_generate = st.sidebar.slider(
         "Number of words to generate",
         min_value=5,
-        max_value=150,
-        value=30,
-        step=5,
+        max_value=10,
+        value=5,
+        step=1,
         help="How many words to generate after the seed text"
     )
     
